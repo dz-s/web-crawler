@@ -7,8 +7,18 @@ fetch(baseUrl)
     const $ = cheerio.load(body);
     const links = $('a'); //jquery get all hyperlinks
     $(links).each(function (i, link) {
-      //console.log(relativeToAbsolute(baseUrl, $(link).attr('href')) + ':\n  ')
-      console.log($(link).text() + ':\n  ' + $(link).attr('href').startsWith('https') ? $(link).attr('href') + ':\n  ': relativeToAbsolute(baseUrl, $(link).attr('href')) + ':\n  ');
+      const href = $(link).attr('href');
+      if (href && !href.startsWith('javascript')) {
+        if (!href.startsWith('http')) {
+          if (href.startsWith('/')) {
+            console.log($(link).text() + ':\n  ' + relativeToAbsolute(baseUrl, href.slice(1, href.length)));
+          } else {
+            console.log($(link).text() + ':\n  ' + relativeToAbsolute(baseUrl, href));
+          }
+        } else {
+          console.log($(link).text() + ':\n  ' + href);
+        }
+      }
     });
   });
 
